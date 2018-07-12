@@ -1,0 +1,75 @@
+[Filenames]
+io_calc_file_in = @fileIn@
+io_calc_file_out = @fileOut@
+
+# Parameters describing the geometry.
+[Geometry]
+# Aspect ratio
+eta = 0.35
+# Equatorial symmetry
+lsymm = 0
+# Azimuthal symmetry
+m0 = 1
+# Radial resolution
+Nr = 33
+# Meridional resolution
+Nt = 64
+# Azimuthal resolution
+Np = 129
+# Spectral resolutions
+Nr_s = 33
+Nt_s = 64
+Np_s = 129
+
+# Parameters describing the boundary conditions.
+# Check drsDefs.f90.in for the definitions.
+[Boundaries]
+# Purely conductive profile
+tempProf = 0
+# Fixed temperature at the boundaries
+tempBC_i = 0
+tempBC_o = 0
+# No slip boundary conditions
+flowBC_i = 1
+flowBC_o = 1
+# Insulating boundaries
+magBC_i = 0
+magBC_o = 0
+
+# adimensional parameters to be used.
+[Adimensional]
+# Taylor
+Ta = 4.0d6
+# Thermal Prandtl
+Pt = 1.0d0
+# Magnetic Prandtl
+Pm = 5.0d0
+# Rayleigh thermal
+Ra_t = 1.0d5
+
+# Parameters that controll the runtime aspects of the simulation.
+[Runtime]
+# Input/output data format.
+lform = 0
+# Calculation to be performed.
+drs_calc_type = 4
+# Simulation time step.
+h = -1.0d-6
+# Maximum number of time steps.
+stepmax = @STEPS@
+# Maximum cpu time in hours
+cpu_max_time = @CPU_MAX_TIME@
+# Should we sample on simulation time
+sample_on_sim_time=.F.
+# How many steps constitute a transient.
+transient = 0
+# Sampling rate in terms of the number of steps.
+sample_rate = @SAMPLING_RATE@
+# Intermediate state save rate in terms of the number of steps.
+state_save_rate = @STATE_SAVE_RATE@
+# Should we have a save rate in simulation time
+state_save_on_sim_time=.F.
+# A comment describing the calculation.
+comment = @COMMENT@
+# Some noise in the initial temperature.
+noise = 0.0d0

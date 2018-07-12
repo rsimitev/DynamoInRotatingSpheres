@@ -1,0 +1,14 @@
+ | inputfilename | outputfilname |
+   @infile@          @outfile@
+ |     noise    |
+     0.D0
+ | magic | lformat | lcalc | lheat | lvel | lmag |
+   10105       1       4       0       1       1
+ |  eta   | Prandtl (t)  | Prandtl (c)|   Taylor   |  Rayleigh (t) |  Rayleigh (c)  |  magPr  |
+ 0.350E+00   0.100E+01     0.100E+01     0.400E+07    0.1000E+06       0.100E+06     0.500E+01
+ | ncos | lmax | nangle | ncosd | lmaxd |nangled | lsymm | m0 |
+     129      96     193     129      64     129       0       1
+ |delta_t|nsteps|cpu_max_time|transient|sampling_rate|step|time|drift|
+   0.0d0  10000   2.0e0       0          200
+ 'Started from Dynamo benchmark by Christensen/Grote'
+

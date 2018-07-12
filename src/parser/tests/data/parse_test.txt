@@ -1,0 +1,4 @@
+[ABBC]
+
+# A comment
+key1 = 1234

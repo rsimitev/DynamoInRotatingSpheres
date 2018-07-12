@@ -1,0 +1,300 @@
+#!/bin/bash
+
+PLOTDIR=l--plots--l
+
+function usage()
+{
+   echo "Usage:"
+   echo " `basename $0` -s <state> [-u] [-t] [-c] [-b|-B] [-e] [-m]"
+   echo " -u plots the radial component of the flow. (default)"
+   echo " -t plots the temperature anomaly."
+   echo " -c plots the composition anomaly."
+   echo " -b plots the radial component of the magnetic field inside the core. Excludes -B."
+   echo " -B plots the field lines inside and out of the core in 3D. Excludes -b."
+   echo " -e scalar plots are taken at an equatorial cut. (default)"
+   echo " -m scalar plots are taken at a meridional cut: phi=0."
+   echo " -r plot the radial component of vector fields. (default, excludes -p)"
+   echo " -p plot the azimuthal component of vector fields. (excludes -r)"
+}
+
+# Prepare drs2dx.in
+function prepareInput()
+{
+local STATE=$1
+local c=$2
+local d=$3
+local e=$4
+cat - << OF > drs2dx.in
+# Basename of the input file.
+# It will also be used as the basename of the output files.
+io_calc_file_in = $STATE
+
+comment = 'A nice comment.'
+
+## Resolution for the render
+# Radial
+Nr = 33
+
+# Meridional
+Nt = 64
+
+# Azimuthal
+Np = 129
+
+# Makes a decision about what to render.\n
+# Numbers are coded as:\n
+#
+# a b c d e
+# | | | | |>e - component 1, 2 or 3 for vectors, irrelevant for scalars
+# | | | |> d - coordinate system or stream lines
+# | | |> c - quantity to be ploted
+# | |> b - curl, gradient or divergence or 0
+# |> a - scalar product with selection or 0
+#
+#
+#  e = 1, 2 or 3 for first second or third coordinate or meridional, azimuthal and poloidal streamlines
+#      1 or 2 for total or anomaly scalar fiels
+#      4 for all three coordinates
+#  d = 1, 2 or 3 for cartesian (x,y,x), spherical (r,t,p) or cyllindrical (s, p, z) components respectively, 4 for streamlines, 0 for none
+#  c = 1 for the flow
+#      2 for the magetic field
+#      3 for the temperature field
+#      4 for the composition field
+#      5 for the magetic field outside the core (up to ro+1)
+#  b = 1 for the curl
+#      2 for the gradient
+#      3 for the divergence
+#      0 for nothing
+#  a = 1 for scalar product with flow
+#      2 for scalar product with field
+#      0 for nothing
+#~~~~~~~
+#
+# For example, if I want the meridional (spherical coordinates) component of the curl of the flow,
+# a=0, b=1, c=1, d=2, e=2 so @param what = 01122
+what = 00$c$d$e
+
+# The type of rendering to do.
+# 1 for volume render
+# 2 for meridional cut
+render_type = 1
+
+# For cuts, it tells drs2dx where the data is to be taken.
+# For volume renders it is unused.
+where = 0.0d0
+OF
+}
+
+if [[ $# -lt 1 ]]; then usage; exit; fi
+
+
+whatName=('flow' 'field' 'temp' 'comp' 'field-outside')
+cutName=('eq' 'mer' '3D')
+cutList=""
+quantList=""
+component=""
+
+while getopts ":s:utcbBemrp" opt
+do
+   case $opt in
+      s)
+         STATE=$OPTARG
+         ;;
+      e)
+         cutList+=' 0'
+         ;;
+      m)
+         cutList+=' 1'
+         ;;
+      r)
+         if [[ $component ]]
+         then
+            echo " Option -r cannot be used when -p is in effect."
+            exit 5
+         fi
+         component='r'
+         ;;
+      p)
+         if [[ $component ]]
+         then
+            echo " Option -p cannot be used when -r is in effect."
+            exit 5
+         fi
+         component='p'
+         ;;
+      u)
+         # The flow
+         quantList+=' 1'
+         ;;
+      t)
+         # Temperature
+         quantList+=' 3'
+         ;;
+      c)
+         # Composition
+         quantList+=' 4'
+         ;;
+      b)
+         # Magnetic field
+         if [[ -n "`echo $quantList | grep 5`" ]]
+         then
+            echo " Option -b cannot be used when -B is in effect."
+            exit 5
+         fi
+         quantList+=' 2'
+         ;;
+      B)
+         if [[ -n "`echo $quantList | grep 2`" ]]
+         then
+            echo " Option -B cannot be used when -b is in effect."
+            exit 5
+         fi
+         quantList+=" 2 5"
+         cutList+=' 2'
+         ;;
+      \?)
+         echo "Invalid option: -$OPTARG" >&2
+         exit 1
+         ;;
+      :)
+         echo "Option -$OPTARG requires an argument." >&2
+         exit 2
+         ;;
+   esac
+done
+
+# Default to ploting the flow.
+if [[ -z $quantList ]]; then quantList=1; fi
+
+# Default to ploting in the equatorial plane.
+if [[ -z $cutList ]]; then cutList=0; fi
+
+# Default to ploting in the radial component of vector fields.
+if [[ -z $component ]]; then component='r'; fi
+
+# Make sure the plots folder exists
+mkdir -p $PLOTDIR
+
+# Prepare the data in 3D
+for quant in $quantList
+do
+   # index for the quantity to plot
+   qq=$(( quant - 1 ))
+   # Will always plot in spherical coordinates
+   # Always plot all three components of vector quantities
+   case $quant in 
+      1|2)
+         d=2
+         e=4 
+         datafile=$PLOTDIR/$STATE-${whatName[$qq]}-vol-vec.general
+         ;;
+      3|4)
+         d=0
+         e=2 
+         datafile=$PLOTDIR/$STATE-${whatName[$qq]}-vol-scal.general
+         ;;
+      5)
+         d=2
+         e=4 
+         datafile=$PLOTDIR/$STATE-${whatName[$qq]}-vol-vec.general
+         ;;
+   esac
+
+   # No need to recompute a data file if we already have one
+   if [[ -f $datafile ]]; then continue; fi
+   prepareInput $STATE $c $d $e
+
+   # Run drs2dx
+   @CMAKE_INSTALL_PREFIX@/bin/drs2dx
+
+   # Cleanup after drs2dx
+   case $quant in 
+      1|2)
+         mv drs2dx.in $PLOTDIR/drs2dx-$STATE-${whatName[$qq]}-vol-vec.in
+         # Rename files 
+         mv $STATE-vec-vol.general $datafile
+         ;;
+      3|4) 
+         mv drs2dx.in $PLOTDIR/drs2dx-$STATE-${whatName[$qq]}-vol-scal.in
+         # Rename files 
+         mv $STATE-vol.general $datafile
+         ;;
+      5)
+         mv drs2dx.in $PLOTDIR/drs2dx-$STATE-${whatName[$qq]}-vol-vec.in
+         # Rename files 
+         mv $STATE-vec-vol.general $datafile
+         ;;
+   esac
+done
+
+# Render using dx
+for cut in $cutList
+do
+   for quant in $quantList
+   do
+      # index for the quantity to plot
+      qq=$(( quant - 1 ))
+      case $quant in 
+         1|2)
+            # Plot the radial component of a vector field in the equatorial plane
+            # only plot if we are not going to plot the field outside
+            if [[ $quant == 1 || ( $quant == 2 && -z "`echo $quantList | grep 5`" ) ]]
+            then
+               echo "quantity=$quant, cut=$cut, component=$component"
+               # Create link with the apropriate name
+               rm -f dx-vec.general
+               ln -s $PLOTDIR/$STATE-${whatName[$qq]}-vol-vec.general dx-vec.general
+               # Plot using dx
+               if [[ $cut -eq 0 ]] 
+               then
+                  dx -processors 1 -script @DXPROGS@/EcutBatch-vect-$component.net
+                  # Store the figures in the right place
+                  mv EcutBatch-image.tiff $PLOTDIR/$STATE-${whatName[$qq]}-$component-${cutName[$cut]}.tiff
+               elif [[ $cut -eq 1 ]]
+               then
+                  dx -processors 1 -script @DXPROGS@/McutBatch-vect-$component.net 
+                  # Store the figures in the right place
+                  mv McutBatch-image.tiff $PLOTDIR/$STATE-${whatName[$qq]}-$component-${cutName[$cut]}.tiff
+               fi
+               rm -f dx-vec.general
+            fi
+            ;;
+         3|4) 
+            # Plot the temperature or composition in the equatorial plane
+            # Create link with the apropriate name
+            rm -f dx-scal.general
+            ln -s  $PLOTDIR/$STATE-${whatName[$qq]}-vol-scal.general dx-scal.general
+            # Plot using dx
+            if [[ $cut -eq 0 ]] 
+            then
+               dx -processors 1 -script @DXPROGS@/EcutBatch-scal.net 
+               # Store the figures in the right place
+               mv EcutBatch-image.tiff $PLOTDIR/$STATE-${whatName[$qq]}-${cutName[$cut]}.tiff
+            elif [[ $cut -eq 1 ]]
+            then
+               dx -processors 1 -script @DXPROGS@/McutBatch-scal.net 
+               # Store the figures in the right place
+               mv McutBatch-image.tiff $PLOTDIR/$STATE-${whatName[$qq]}-${cutName[$cut]}.tiff
+            fi
+            rm -f dx-scal.general
+            ;;
+         5)
+            if [[ $cut -eq 2 ]] 
+            then
+               # Plot the magnetic field
+               # Create link with the apropriate name
+               rm -f dx-vec.general dx-vec-outside.general
+               ln -s  $PLOTDIR/$STATE-${whatName[1]}-vol-vec.general dx-vec.general
+               ln -s  $PLOTDIR/$STATE-${whatName[4]}-vol-vec.general dx-vec-outside.general
+               # Plot using dx
+               dx -processors 1 -script @DXPROGS@/VcutBatch-vect-outside.net
+               rm -f dx-vec.general dx-vec-outside.general
+               mv VcutBatch-image.tiff $PLOTDIR/$STATE-${whatName[$qq]}-${cutName[$cut]}.tiff
+            fi
+            ;;
+      esac
+   done
+done
+
+
+# vim: tabstop=3:softtabstop=3:shiftwidth=3:expandtab

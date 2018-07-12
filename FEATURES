@@ -1,0 +1,21 @@
+This is a list of features that were added relatively to the original code.
+* Modular design.
+* Use cmake as a build tool.
+* Off-tree compilation: keep the source code clean ;) .
+* Automatic packaging of source or pre-compiled binaries.
+* Fourier transforms using FFTW3.
+* Legendre polynomials from SHTOOLS.
+* Variable time-step selectable at run-time.
+* Stopping condition on cpu-time.
+* Stopping condition on lock-file removal.
+* Resolution of computation is independent of resolution of inputs.
+* MPI details of the parallel implementation fully abstracted from the main code.
+* Online documentation with doxygen and CMake.
+* Also save the periodically saved quantities after the last step.
+* Added pseudo-vacuum magnetic boundary conditions.
+* Double diffusive convection.
+* Most of the code is now compiled into a library for reuse.
+* Utilities based on the above library.
+* User handbook.
+* Rendering using IDL
+* Rendering using OpenDX

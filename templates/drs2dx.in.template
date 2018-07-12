@@ -1,0 +1,54 @@
+# Basename of the input file.
+# It will also be used as the basename of the output files.
+io_calc_file_in = e035p34h92
+
+comment = 'A nice comment.'
+
+## Resolution for the render
+# Radial
+Nr = 33
+
+# Meridional
+Nt = 64
+
+# Azimuthal
+Np = 129
+
+# Makes a decision about what to render.\n
+# Numbers are coded as:\n
+#
+# a b c d e
+# | | | | |>e - component 1, 2 or 3 for vectors, irrelevant for scalars
+# | | | |> d - coordinate system or stream lines 
+# | | |> c - quantity to be ploted
+# | |> b - curl, gradient or divergence or 0
+# |> a - scalar product with selection or 0
+# 
+#
+#  e = 1, 2 or 3 for first second or third coordinate or meridional, azimuthal and poloidal streamlines
+#      1 or 2 for total or anomaly scalar fiels
+#  d = 1, 2 or 3 for cartesian (x,y,x), spherical (r,t,p) or cyllindrical (s, p, z) components respectively, 4 for streamlines, 0 for none
+#  c = 1 for the flow
+#      2 for the magetic field
+#      3 for the temperature field
+#      4 for the composition field
+#  b = 1 for the curl
+#      2 for the gradient
+#      3 for the divergence
+#      0 for nothing
+#  a = 1 for scalar product with flow
+#      2 for scalar product with field
+#      0 for nothing
+#
+# For example, if I want the meridional component of the curl of the flow,
+# a=0, b=1, c=1, d=2, e=2 so @param what = 01122
+what = 1
+
+# The type of rendering to do.
+# 1 for volume render
+# 2 for meridional cut
+render_type = 1
+
+# For cuts, it tells drs2dx where the data is to be taken.
+# For volume renders it is unused.
+where = 0.0d0

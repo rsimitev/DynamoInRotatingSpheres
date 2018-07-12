@@ -1,0 +1,9 @@
+ | magic | lformat | lcalc | lheat | lvel | lmag |
+   10104       1       4       0       1       0
+ |  eta   | Prandtl |   Taylor   |  Rayleigh   |  magPr  |
+ 0.350E+00 0.100E+01 0.4000000E+07 0.1000000E+06 0.500E+01
+ | ncos | lmax | nangle | ncosd | lmaxd |nangled | lsymm | m0 |
+      33      64     128      33      42      84       0       1
+ |delta_t|nsteps|transient|sampling_rate|step|time|drift|
+ 0.500E-04  10000      0   100  00000 0.00000E+0 0.000E+00
+ 'Dynamo benchmark by Christensen                             '

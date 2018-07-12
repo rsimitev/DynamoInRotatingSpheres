@@ -1,0 +1,10 @@
+# This is the basename of the state to compute profiles from.
+state = e035p1t2r100000m1p5test.1
+
+# What profile are we computing anyway?
+# Possible values are:
+# 1 - The temperature anomalies
+# 2 - The temperature (anomaly+background)
+# 3 - The composition anomalies
+# 4 - The composition (anomaly+background)
+what = 1

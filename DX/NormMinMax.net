@@ -1,0 +1,82 @@
+//
+// time: Mon Sep 30 11:48:25 2013
+//
+// version: 3.2.0 (format), 4.4.4 (DX)
+//
+//
+// Begin MDF
+// MODULE SymmetricMinMax
+// CATEGORY Macros
+// DESCRIPTION Outputs min and max values symmetric around zero for a scalar field
+// INPUT input_1; data field or value list; (none);  
+// OUTPUT min; value or value list or field;  
+// OUTPUT max; value or value list or field;  
+// End MDF
+// workspace: width = 414, height = 489
+// layout: snap = 0, width = 50, height = 50, align = NN
+//
+macro SymmetricMinMax(
+ input_1
+) -> (
+ min
+,max
+) {
+    // 
+    // node Input[1]: x = 196, y = 71, inputs = 0, label = Input
+    // parameter: position = 1, name = 'input_1', value = ' ', descriptive = 0, description = ' ', required = 1, visible = 1
+    //
+SymmetricMinMax_Input_1_out_1 = input_1;
+    // 
+    // node Statistics[1]: x = 108, y = 164, inputs = 1, label = Statistics
+    //
+SymmetricMinMax_Statistics_1_out_1,
+SymmetricMinMax_Statistics_1_out_2,
+SymmetricMinMax_Statistics_1_out_3,
+SymmetricMinMax_Statistics_1_out_4,
+SymmetricMinMax_Statistics_1_out_5 = 
+    Statistics(
+    SymmetricMinMax_Input_1_out_1
+    ) [instance: 1, cache: 1];
+    // 
+    // node Compute[3]: x = 279, y = 218, inputs = 3, label = Compute
+    // input[1]: defaulting = 0, visible = 0, type = 32, value = "max(abs($0),abs($1))"
+    // expression: value = max(abs(a),abs(b))
+    // name[2]: value = a
+    // name[3]: value = b
+    //
+SymmetricMinMax_Compute_3_out_1 = 
+    Compute(
+    "max(abs($0),abs($1))",
+    SymmetricMinMax_Statistics_1_out_4,
+    SymmetricMinMax_Statistics_1_out_5
+    ) [instance: 3, cache: 1];
+    // 
+    // node Compute[4]: x = 154, y = 328, inputs = 3, label = Compute
+    // input[1]: defaulting = 0, visible = 0, type = 32, value = "-$0"
+    // expression: value = -a
+    // name[2]: value = a
+    // name[3]: value = b
+    //
+SymmetricMinMax_Compute_4_out_1 = 
+    Compute(
+    "-$0",
+    SymmetricMinMax_Compute_3_out_1,
+    NULL
+    ) [instance: 4, cache: 1];
+    // 
+    // node Output[1]: x = 117, y = 427, inputs = 1, label = Output
+    // parameter: position = 1, name = 'min', value = ' ', descriptive = 0, description = ' ', required = 0, visible = 1
+    //
+min = SymmetricMinMax_Compute_4_out_1;
+    // 
+    // node Output[2]: x = 359, y = 327, inputs = 1, label = Output
+    // parameter: position = 2, name = 'max', value = ' ', descriptive = 0, description = ' ', required = 0, visible = 1
+    //
+max = SymmetricMinMax_Compute_3_out_1;
+// network: end of macro body
+}
+SymmetricMinMax_Input_1_out_1 = NULL;
+SymmetricMinMax_Statistics_1_out_4 = NULL;
+SymmetricMinMax_Statistics_1_out_5 = NULL;
+SymmetricMinMax_Compute_3_out_1 = NULL;
+SymmetricMinMax_Compute_4_out_1 = NULL;

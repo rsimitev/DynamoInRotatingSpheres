@@ -1,0 +1,17 @@
+ri=1221.5
+ro=3480.0
+Ti=5500
+To=4040
+# Values taken from Davies & Gubbins 2011
+dT=Ti-To
+a=To
+b=dT/(ro-ri)
+g(x) = To + b*(ri*ro/x -ri)
+h(x) = Ti - dT*(x**2-ri**2)/(ro**2-ri**2)
+set grid
+set ylabel 'Temperature/K'
+set xlabel 'Radius/km'
+set terminal latex rotate
+set output 'TemperatureProfiles.tex'
+plot [ri:ro] g(x) lw 3 t 'Conduction', h(x) lw 3 t 'Adiabatic'
+show output

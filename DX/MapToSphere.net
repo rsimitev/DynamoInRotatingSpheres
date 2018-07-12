@@ -1,0 +1,92 @@
+//
+// time: Mon Sep 30 13:05:36 2013
+//
+// version: 3.2.0 (format), 4.4.4 (DX)
+//
+//
+// Begin MDF
+// MODULE MapToSphere
+// CATEGORY Macros
+// DESCRIPTION Maps a field onto a spherical surface.
+// INPUT input_1; field; (no default);  
+// INPUT input_2; scalar or scalar list; (no default);  
+// OUTPUT output_1; field or value or value list;  
+// End MDF
+// workspace: width = 446, height = 756
+// layout: snap = 1, width = 50, height = 50, align = CC
+//
+macro MapToSphere(
+ input_1
+,input_2
+) -> (
+ output_1
+) {
+    // 
+    // node Input[7]: x = 404, y = 144, inputs = 0, label = Input
+    // parameter: position = 1, name = 'input_1', value = ' ', descriptive = 0, description = ' ', required = 0, visible = 1
+    //
+MapToSphere_Input_7_out_1 = input_1;
+    // 
+    // node Mark[2]: x = 201, y = 294, inputs = 2, label = Mark
+    // input[2]: defaulting = 0, visible = 1, type = 32, value = "positions"
+    //
+MapToSphere_Mark_2_out_1 = 
+    Mark(
+    MapToSphere_Input_7_out_1,
+    "positions"
+    ) [instance: 2, cache: 1];
+    // 
+    // node Compute[35]: x = 191, y = 394, inputs = 3, label = Compute
+    // input[1]: defaulting = 0, visible = 0, type = 32, value = "sqrt($0.x**2+$0.y**2+$0.z**2)"
+    // expression: value = sqrt(a.x**2+a.y**2+a.z**2)
+    // name[2]: value = a
+    // name[3]: value = b
+    //
+MapToSphere_Compute_35_out_1 = 
+    Compute(
+    "sqrt($0.x**2+$0.y**2+$0.z**2)",
+    MapToSphere_Mark_2_out_1,
+    NULL
+    ) [instance: 35, cache: 1];
+    // 
+    // node Input[8]: x = 254, y = 144, inputs = 0, label = Input
+    // parameter: position = 2, name = 'input_2', value = '(no default)', descriptive = 1, description = ' ', required = 0, visible = 1
+    //
+MapToSphere_Input_8_out_1 = input_2;
+    // 
+    // node Isosurface[3]: x = 236, y = 494, inputs = 6, label = Isosurface
+    // input[2]: defaulting = 1, visible = 1, type = 5, value = 0.54
+    //
+MapToSphere_Isosurface_3_out_1 = 
+    Isosurface(
+    MapToSphere_Compute_35_out_1,
+    MapToSphere_Input_8_out_1,
+    NULL,
+    NULL,
+    NULL,
+    NULL
+    ) [instance: 3, cache: 1];
+    // 
+    // node Map[1]: x = 301, y = 594, inputs = 4, label = Map
+    // input[2]: defaulting = 1, visible = 1, type = 5, value = 0.7
+    //
+MapToSphere_Map_1_out_1 = 
+    Map(
+    MapToSphere_Isosurface_3_out_1,
+    MapToSphere_Input_7_out_1,
+    NULL,
+    NULL
+    ) [instance: 1, cache: 1];
+    // 
+    // node Output[5]: x = 298, y = 694, inputs = 1, label = Output
+    // parameter: position = 1, name = 'output_1', value = ' ', descriptive = 0, description = ' ', required = 0, visible = 1
+    //
+output_1 = MapToSphere_Map_1_out_1;
+// network: end of macro body
+}
+MapToSphere_Input_7_out_1 = NULL;
+MapToSphere_Mark_2_out_1 = NULL;
+MapToSphere_Compute_35_out_1 = NULL;
+MapToSphere_Input_8_out_1 = NULL;
+MapToSphere_Isosurface_3_out_1 = NULL;
+MapToSphere_Map_1_out_1 = NULL;

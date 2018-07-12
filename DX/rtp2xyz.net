@@ -1,0 +1,304 @@
+//
+// time: Wed Dec 10 16:16:05 2014
+//
+// version: 3.2.0 (format), 4.4.4 (DX)
+//
+//
+// Begin MDF
+// MODULE rtp2xyz
+// CATEGORY Macros
+// DESCRIPTION Converts the spherical components of a vector field into cartesian components.
+// INPUT input_1; field; (no default);  
+// OUTPUT output_1; value or value list or field;  
+// End MDF
+// page assignment: Main	order=2, windowed=0, showing=1
+// workspace: width = 977, height = 882
+// layout: snap = 0, width = 50, height = 50, align = NN
+//
+macro rtp2xyz(
+ input_1
+) -> (
+ output_1
+) {
+    // 
+    // node Input[1]: x = 247, y = 10, inputs = 0, label = Input
+    // page group: Main
+    // parameter: position = 1, name = 'input_1', value = '(no default)', descriptive = 1, description = ' ', required = 0, visible = 1
+    //
+rtp2xyz_Input_1_out_1 = input_1;
+    // 
+    // node Mark[1]: x = 342, y = 92, inputs = 2, label = Mark
+    // input[2]: defaulting = 0, visible = 1, type = 32, value = "positions"
+    // page group: Main
+    //
+rtp2xyz_Mark_1_out_1 = 
+    Mark(
+    rtp2xyz_Input_1_out_1,
+    "positions"
+    ) [instance: 1, cache: 1];
+    // 
+    // node Compute[28]: x = 391, y = 182, inputs = 3, label = Compute
+    // input[1]: defaulting = 0, visible = 0, type = 32, value = "sqrt($0.x*$0.x + $0.y*$0.y + $0.z*$0.z)"
+    // page group: Main
+    // expression: value = sqrt(a.x*a.x + a.y*a.y + a.z*a.z)
+    // name[2]: value = a
+    // name[3]: value = b
+    //
+rtp2xyz_Compute_28_out_1 = 
+    Compute(
+    "sqrt($0.x*$0.x + $0.y*$0.y + $0.z*$0.z)",
+    rtp2xyz_Mark_1_out_1,
+    NULL
+    ) [instance: 28, cache: 1];
+    // 
+    // node Compute[30]: x = 145, y = 257, inputs = 3, label = Compute
+    // input[1]: defaulting = 0, visible = 0, type = 32, value = "$0.z/$1"
+    // page group: Main
+    // expression: value = a.z/b
+    // name[2]: value = a
+    // name[3]: value = b
+    //
+rtp2xyz_Compute_30_out_1 = 
+    Compute(
+    "$0.z/$1",
+    rtp2xyz_Mark_1_out_1,
+    rtp2xyz_Compute_28_out_1
+    ) [instance: 30, cache: 1];
+    // 
+    // node Compute[29]: x = 631, y = 187, inputs = 3, label = Compute
+    // input[1]: defaulting = 0, visible = 0, type = 32, value = "($0.x*$0.x+$0.y*$0.y) > 0 ? sqrt($0.x*$0.x + $0.y*$0.y): 0.00001"
+    // page group: Main
+    // expression: value = (a.x*a.x+a.y*a.y) > 0 ? sqrt(a.x*a.x + a.y*a.y): 0.00001
+    // name[2]: value = a
+    // name[3]: value = b
+    //
+rtp2xyz_Compute_29_out_1 = 
+    Compute(
+    "($0.x*$0.x+$0.y*$0.y) > 0 ? sqrt($0.x*$0.x + $0.y*$0.y): 0.00001",
+    rtp2xyz_Mark_1_out_1,
+    NULL
+    ) [instance: 29, cache: 1];
+    // 
+    // node Compute[31]: x = 312, y = 331, inputs = 3, label = Compute
+    // input[1]: defaulting = 0, visible = 0, type = 32, value = "$0/$1"
+    // page group: Main
+    // expression: value = a/b
+    // name[2]: value = a
+    // name[3]: value = b
+    //
+rtp2xyz_Compute_31_out_1 = 
+    Compute(
+    "$0/$1",
+    rtp2xyz_Compute_29_out_1,
+    rtp2xyz_Compute_28_out_1
+    ) [instance: 31, cache: 1];
+    // 
+    // node Compute[12]: x = 905, y = 637, inputs = 4, label = Compute
+    // input[1]: defaulting = 0, visible = 0, type = 32, value = "$0.x*$1 - $0.y*$2"
+    // page group: Main
+    // expression: value = a.x*b - a.y*c
+    // name[2]: value = a
+    // name[3]: value = b
+    // name[4]: value = c
+    //
+rtp2xyz_Compute_12_out_1 = 
+    Compute(
+    "$0.x*$1 - $0.y*$2",
+    rtp2xyz_Input_1_out_1,
+    rtp2xyz_Compute_30_out_1,
+    rtp2xyz_Compute_31_out_1
+    ) [instance: 12, cache: 1];
+    // 
+    // node Compute[32]: x = 484, y = 337, inputs = 3, label = Compute
+    // input[1]: defaulting = 0, visible = 0, type = 32, value = "$1>0 ? $0.x/$1 : $0.x*9999999"
+    // page group: Main
+    // expression: value = b>0 ? a.x/b : a.x*9999999
+    // name[2]: value = a
+    // name[3]: value = b
+    //
+rtp2xyz_Compute_32_out_1 = 
+    Compute(
+    "$1>0 ? $0.x/$1 : $0.x*9999999",
+    rtp2xyz_Mark_1_out_1,
+    rtp2xyz_Compute_29_out_1
+    ) [instance: 32, cache: 1];
+    // 
+    // node Compute[15]: x = 10, y = 550, inputs = 4, label = Compute
+    // input[1]: defaulting = 0, visible = 0, type = 32, value = "$0.x*$1*$2"
+    // page group: Main
+    // expression: value = a.x*b*c
+    // name[2]: value = a
+    // name[3]: value = b
+    // name[4]: value = c
+    //
+rtp2xyz_Compute_15_out_1 = 
+    Compute(
+    "$0.x*$1*$2",
+    rtp2xyz_Input_1_out_1,
+    rtp2xyz_Compute_31_out_1,
+    rtp2xyz_Compute_32_out_1
+    ) [instance: 15, cache: 1];
+    // 
+    // node Compute[33]: x = 687, y = 344, inputs = 3, label = Compute
+    // input[1]: defaulting = 0, visible = 0, type = 32, value = "$1>0 ? $0.y/$1 : $0.y*9999999"
+    // page group: Main
+    // expression: value = b>0 ? a.y/b : a.y*9999999
+    // name[2]: value = a
+    // name[3]: value = b
+    //
+rtp2xyz_Compute_33_out_1 = 
+    Compute(
+    "$1>0 ? $0.y/$1 : $0.y*9999999",
+    rtp2xyz_Mark_1_out_1,
+    rtp2xyz_Compute_29_out_1
+    ) [instance: 33, cache: 1];
+    // 
+    // node Compute[16]: x = 418, y = 548, inputs = 4, label = Compute
+    // input[1]: defaulting = 0, visible = 0, type = 32, value = "$0.x*$1*$2"
+    // page group: Main
+    // expression: value = a.x*b*c
+    // name[2]: value = a
+    // name[3]: value = b
+    // name[4]: value = c
+    //
+rtp2xyz_Compute_16_out_1 = 
+    Compute(
+    "$0.x*$1*$2",
+    rtp2xyz_Input_1_out_1,
+    rtp2xyz_Compute_31_out_1,
+    rtp2xyz_Compute_33_out_1
+    ) [instance: 16, cache: 1];
+    // 
+    // node Compute[17]: x = 118, y = 540, inputs = 4, label = Compute
+    // input[1]: defaulting = 0, visible = 0, type = 32, value = "$0.y*$1*$2"
+    // page group: Main
+    // expression: value = a.y*b*c
+    // name[2]: value = a
+    // name[3]: value = b
+    // name[4]: value = c
+    //
+rtp2xyz_Compute_17_out_1 = 
+    Compute(
+    "$0.y*$1*$2",
+    rtp2xyz_Input_1_out_1,
+    rtp2xyz_Compute_30_out_1,
+    rtp2xyz_Compute_32_out_1
+    ) [instance: 17, cache: 1];
+    // 
+    // node Compute[18]: x = 220, y = 541, inputs = 3, label = Compute
+    // input[1]: defaulting = 0, visible = 0, type = 32, value = "$0.z*$1"
+    // page group: Main
+    // expression: value = a.z*b
+    // name[2]: value = a
+    // name[3]: value = b
+    //
+rtp2xyz_Compute_18_out_1 = 
+    Compute(
+    "$0.z*$1",
+    rtp2xyz_Input_1_out_1,
+    rtp2xyz_Compute_33_out_1
+    ) [instance: 18, cache: 1];
+    // 
+    // node Compute[19]: x = 105, y = 641, inputs = 4, label = Compute
+    // input[1]: defaulting = 0, visible = 0, type = 32, value = "$0+$1-$2"
+    // page group: Main
+    // expression: value = a+b-c
+    // name[2]: value = a
+    // name[3]: value = b
+    // name[4]: value = c
+    //
+rtp2xyz_Compute_19_out_1 = 
+    Compute(
+    "$0+$1-$2",
+    rtp2xyz_Compute_15_out_1,
+    rtp2xyz_Compute_17_out_1,
+    rtp2xyz_Compute_18_out_1
+    ) [instance: 19, cache: 1];
+    // 
+    // node Compute[22]: x = 593, y = 554, inputs = 4, label = Compute
+    // input[1]: defaulting = 0, visible = 0, type = 32, value = "$0.y*$1*$2"
+    // page group: Main
+    // expression: value = a.y*b*c
+    // name[2]: value = a
+    // name[3]: value = b
+    // name[4]: value = c
+    //
+rtp2xyz_Compute_22_out_1 = 
+    Compute(
+    "$0.y*$1*$2",
+    rtp2xyz_Input_1_out_1,
+    rtp2xyz_Compute_30_out_1,
+    rtp2xyz_Compute_33_out_1
+    ) [instance: 22, cache: 1];
+    // 
+    // node Compute[23]: x = 728, y = 540, inputs = 3, label = Compute
+    // input[1]: defaulting = 0, visible = 0, type = 32, value = "$0.z*$1"
+    // page group: Main
+    // expression: value = a.z*b
+    // name[2]: value = a
+    // name[3]: value = b
+    //
+rtp2xyz_Compute_23_out_1 = 
+    Compute(
+    "$0.z*$1",
+    rtp2xyz_Input_1_out_1,
+    rtp2xyz_Compute_32_out_1
+    ) [instance: 23, cache: 1];
+    // 
+    // node Compute[20]: x = 606, y = 658, inputs = 4, label = Compute
+    // input[1]: defaulting = 0, visible = 0, type = 32, value = "$0+$1+$2"
+    // page group: Main
+    // expression: value = a+b+c
+    // name[2]: value = a
+    // name[3]: value = b
+    // name[4]: value = c
+    //
+rtp2xyz_Compute_20_out_1 = 
+    Compute(
+    "$0+$1+$2",
+    rtp2xyz_Compute_16_out_1,
+    rtp2xyz_Compute_22_out_1,
+    rtp2xyz_Compute_23_out_1
+    ) [instance: 20, cache: 1];
+    // 
+    // node Compute[24]: x = 461, y = 744, inputs = 4, label = Compute
+    // input[1]: defaulting = 0, visible = 0, type = 32, value = "[$0, $1, $2]"
+    // page group: Main
+    // expression: value = [a, b, c]
+    // name[2]: value = a
+    // name[3]: value = b
+    // name[4]: value = c
+    //
+rtp2xyz_Compute_24_out_1 = 
+    Compute(
+    "[$0, $1, $2]",
+    rtp2xyz_Compute_19_out_1,
+    rtp2xyz_Compute_20_out_1,
+    rtp2xyz_Compute_12_out_1
+    ) [instance: 24, cache: 1];
+    // 
+    // node Output[1]: x = 143, y = 820, inputs = 1, label = Output
+    // page group: Main
+    // parameter: position = 1, name = 'output_1', value = ' ', descriptive = 0, description = ' ', required = 0, visible = 1
+    //
+output_1 = rtp2xyz_Compute_24_out_1;
+// network: end of macro body
+}
+rtp2xyz_Input_1_out_1 = NULL;
+rtp2xyz_Mark_1_out_1 = NULL;
+rtp2xyz_Compute_28_out_1 = NULL;
+rtp2xyz_Compute_30_out_1 = NULL;
+rtp2xyz_Compute_29_out_1 = NULL;
+rtp2xyz_Compute_31_out_1 = NULL;
+rtp2xyz_Compute_12_out_1 = NULL;
+rtp2xyz_Compute_32_out_1 = NULL;
+rtp2xyz_Compute_15_out_1 = NULL;
+rtp2xyz_Compute_33_out_1 = NULL;
+rtp2xyz_Compute_16_out_1 = NULL;
+rtp2xyz_Compute_17_out_1 = NULL;
+rtp2xyz_Compute_18_out_1 = NULL;
+rtp2xyz_Compute_19_out_1 = NULL;
+rtp2xyz_Compute_22_out_1 = NULL;
+rtp2xyz_Compute_23_out_1 = NULL;
+rtp2xyz_Compute_20_out_1 = NULL;
+rtp2xyz_Compute_24_out_1 = NULL;

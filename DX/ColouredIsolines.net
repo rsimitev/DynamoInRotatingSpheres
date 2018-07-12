@@ -1,0 +1,259 @@
+//
+// time: Mon Sep 30 13:04:26 2013
+//
+// version: 3.2.0 (format), 4.4.4 (DX)
+//
+//
+// Begin MDF
+// MODULE ColouredIsolines
+// CATEGORY Macros
+// INPUT data; field; (none); Field to compute isolines/surfaces
+// INPUT number; integer; 10; Number of isosurfaces/lines on each side of zero.
+// INPUT BoundColor[visible:0]; field or vector or string; "black"; Color of he boundary.
+// OPTIONS red ; green ; blue ; yellow ; orange ; purple ; black ; white ; cyan ; magenta
+// OUTPUT isolines; group;  
+// End MDF
+// workspace: width = 811, height = 906
+// layout: snap = 1, width = 50, height = 50, align = CC
+//
+macro ColouredIsolines(
+ data
+,number = 10
+,BoundColor = "black"
+) -> (
+ isolines
+) {
+    // 
+    // node Input[4]: x = 254, y = 44, inputs = 0, label = Input
+    // parameter: position = 1, name = 'data', value = ' ', descriptive = 0, description = 'Field to compute isolines/surfaces', required = 1, visible = 1
+    //
+ColouredIsolines_Input_4_out_1 = data;
+    // 
+    // node Isosurface[2]: x = 186, y = 544, inputs = 6, label = Isosurface
+    // input[2]: defaulting = 0, visible = 1, type = 5, value = 0.0
+    //
+ColouredIsolines_Isosurface_2_out_1 = 
+    Isosurface(
+    ColouredIsolines_Input_4_out_1,
+    0.0,
+    NULL,
+    NULL,
+    NULL,
+    NULL
+    ) [instance: 2, cache: 1];
+    // 
+    // node Color[3]: x = 239, y = 644, inputs = 5, label = Color
+    // input[2]: defaulting = 0, visible = 1, type = 32, value = "green"
+    //
+ColouredIsolines_Color_3_out_1 = 
+    Color(
+    ColouredIsolines_Isosurface_2_out_1,
+    "green",
+    NULL,
+    NULL,
+    NULL
+    ) [instance: 3, cache: 1];
+    // 
+    // node Statistics[1]: x = 315, y = 144, inputs = 1, label = Statistics
+    //
+ColouredIsolines_Statistics_1_out_1,
+ColouredIsolines_Statistics_1_out_2,
+ColouredIsolines_Statistics_1_out_3,
+ColouredIsolines_Statistics_1_out_4,
+ColouredIsolines_Statistics_1_out_5 = 
+    Statistics(
+    ColouredIsolines_Input_4_out_1
+    ) [instance: 1, cache: 1];
+    // 
+    // node Compute[4]: x = 391, y = 244, inputs = 3, label = Compute
+    // input[1]: defaulting = 0, visible = 0, type = 32, value = "max(abs($0),abs($1))"
+    // expression: value = max(abs(a),abs(b))
+    // name[2]: value = a
+    // name[3]: value = b
+    //
+ColouredIsolines_Compute_4_out_1 = 
+    Compute(
+    "max(abs($0),abs($1))",
+    ColouredIsolines_Statistics_1_out_4,
+    ColouredIsolines_Statistics_1_out_5
+    ) [instance: 4, cache: 1];
+    // 
+    // node Compute[5]: x = 241, y = 344, inputs = 3, label = Compute
+    // input[1]: defaulting = 0, visible = 0, type = 32, value = "-$0"
+    // expression: value = -a
+    // name[2]: value = a
+    // name[3]: value = b
+    //
+ColouredIsolines_Compute_5_out_1 = 
+    Compute(
+    "-$0",
+    ColouredIsolines_Compute_4_out_1,
+    NULL
+    ) [instance: 5, cache: 1];
+    // 
+    // node Input[3]: x = 504, y = 44, inputs = 0, label = Input
+    // parameter: position = 2, name = 'number', value = '10', descriptive = 0, description = 'Number of isosurfaces/lines on each side of zero.', required = 0, visible = 1
+    //
+ColouredIsolines_Input_3_out_1 = number;
+    // 
+    // node Compute[6]: x = 341, y = 344, inputs = 3, label = Compute
+    // input[1]: defaulting = 0, visible = 0, type = 32, value = "-$0/$1"
+    // expression: value = -a/b
+    // name[2]: value = a
+    // name[3]: value = b
+    //
+ColouredIsolines_Compute_6_out_1 = 
+    Compute(
+    "-$0/$1",
+    ColouredIsolines_Compute_4_out_1,
+    ColouredIsolines_Input_3_out_1
+    ) [instance: 6, cache: 1];
+    // 
+    // node Enumerate[2]: x = 265, y = 444, inputs = 5, label = Enumerate
+    // input[1]: defaulting = 1, visible = 1, type = 29, value = 0
+    //
+ColouredIsolines_Enumerate_2_out_1 = 
+    Enumerate(
+    ColouredIsolines_Compute_5_out_1,
+    ColouredIsolines_Compute_6_out_1,
+    ColouredIsolines_Input_3_out_1,
+    NULL,
+    NULL
+    ) [instance: 2, cache: 1];
+    // 
+    // node Isosurface[1]: x = 336, y = 544, inputs = 6, label = Isosurface
+    // input[3]: defaulting = 1, visible = 1, type = 1, value = 20
+    // input[5]: defaulting = 1, visible = 0, type = 3, value = 0
+    //
+ColouredIsolines_Isosurface_1_out_1 = 
+    Isosurface(
+    ColouredIsolines_Input_4_out_1,
+    ColouredIsolines_Enumerate_2_out_1,
+    NULL,
+    NULL,
+    NULL,
+    NULL
+    ) [instance: 1, cache: 1];
+    // 
+    // node Color[1]: x = 389, y = 644, inputs = 5, label = Color
+    // input[2]: defaulting = 0, visible = 1, type = 32, value = "blue"
+    //
+ColouredIsolines_Color_1_out_1 = 
+    Color(
+    ColouredIsolines_Isosurface_1_out_1,
+    "blue",
+    NULL,
+    NULL,
+    NULL
+    ) [instance: 1, cache: 1];
+    // 
+    // node Compute[7]: x = 491, y = 344, inputs = 3, label = Compute
+    // input[1]: defaulting = 0, visible = 0, type = 32, value = "$0/$1"
+    // expression: value = a/b
+    // name[2]: value = a
+    // name[3]: value = b
+    //
+ColouredIsolines_Compute_7_out_1 = 
+    Compute(
+    "$0/$1",
+    ColouredIsolines_Compute_4_out_1,
+    ColouredIsolines_Input_3_out_1
+    ) [instance: 7, cache: 1];
+    // 
+    // node Enumerate[1]: x = 515, y = 444, inputs = 5, label = Enumerate
+    // input[2]: defaulting = 1, visible = 1, type = 29, value = 0
+    // input[3]: defaulting = 1, visible = 1, type = 1, value = 4
+    //
+ColouredIsolines_Enumerate_1_out_1 = 
+    Enumerate(
+    ColouredIsolines_Compute_7_out_1,
+    ColouredIsolines_Compute_4_out_1,
+    ColouredIsolines_Input_3_out_1,
+    NULL,
+    NULL
+    ) [instance: 1, cache: 1];
+    // 
+    // node Isosurface[3]: x = 486, y = 544, inputs = 6, label = Isosurface
+    //
+ColouredIsolines_Isosurface_3_out_1 = 
+    Isosurface(
+    ColouredIsolines_Input_4_out_1,
+    ColouredIsolines_Enumerate_1_out_1,
+    NULL,
+    NULL,
+    NULL,
+    NULL
+    ) [instance: 3, cache: 1];
+    // 
+    // node Color[2]: x = 539, y = 644, inputs = 5, label = Color
+    // input[2]: defaulting = 0, visible = 1, type = 32, value = "red"
+    //
+ColouredIsolines_Color_2_out_1 = 
+    Color(
+    ColouredIsolines_Isosurface_3_out_1,
+    "red",
+    NULL,
+    NULL,
+    NULL
+    ) [instance: 2, cache: 1];
+    // 
+    // node ShowBoundary[1]: x = 619, y = 544, inputs = 2, label = ShowBoundary
+    //
+ColouredIsolines_ShowBoundary_1_out_1 = 
+    ShowBoundary(
+    ColouredIsolines_Input_4_out_1,
+    NULL
+    ) [instance: 1, cache: 1];
+    // 
+    // node Input[5]: x = 754, y = 44, inputs = 0, label = Input
+    // parameter: position = 3, name = 'BoundColor', value = '"black"', descriptive = 0, description = 'Color of he boundary.', required = 0, visible = 0
+    //
+ColouredIsolines_Input_5_out_1 = BoundColor;
+    // 
+    // node Color[4]: x = 739, y = 644, inputs = 5, label = Color
+    //
+ColouredIsolines_Color_4_out_1 = 
+    Color(
+    ColouredIsolines_ShowBoundary_1_out_1,
+    ColouredIsolines_Input_5_out_1,
+    NULL,
+    NULL,
+    NULL
+    ) [instance: 4, cache: 1];
+    // 
+    // node Collect[1]: x = 527, y = 744, inputs = 4, label = Collect
+    //
+ColouredIsolines_Collect_1_out_1 = 
+    Collect(
+    ColouredIsolines_Color_3_out_1,
+    ColouredIsolines_Color_1_out_1,
+    ColouredIsolines_Color_2_out_1,
+    ColouredIsolines_Color_4_out_1
+    ) [instance: 1, cache: 1];
+    // 
+    // node Output[3]: x = 698, y = 844, inputs = 1, label = Output
+    // parameter: position = 1, name = 'isolines', value = ' ', descriptive = 0, description = ' ', required = 0, visible = 1
+    //
+isolines = ColouredIsolines_Collect_1_out_1;
+// network: end of macro body
+}
+ColouredIsolines_Input_4_out_1 = NULL;
+ColouredIsolines_Isosurface_2_out_1 = NULL;
+ColouredIsolines_Color_3_out_1 = NULL;
+ColouredIsolines_Statistics_1_out_4 = NULL;
+ColouredIsolines_Statistics_1_out_5 = NULL;
+ColouredIsolines_Compute_4_out_1 = NULL;
+ColouredIsolines_Compute_5_out_1 = NULL;
+ColouredIsolines_Input_3_out_1 = NULL;
+ColouredIsolines_Compute_6_out_1 = NULL;
+ColouredIsolines_Enumerate_2_out_1 = NULL;
+ColouredIsolines_Isosurface_1_out_1 = NULL;
+ColouredIsolines_Color_1_out_1 = NULL;
+ColouredIsolines_Compute_7_out_1 = NULL;
+ColouredIsolines_Enumerate_1_out_1 = NULL;
+ColouredIsolines_Isosurface_3_out_1 = NULL;
+ColouredIsolines_Color_2_out_1 = NULL;
+ColouredIsolines_ShowBoundary_1_out_1 = NULL;
+ColouredIsolines_Input_5_out_1 = NULL;
+ColouredIsolines_Color_4_out_1 = NULL;
+ColouredIsolines_Collect_1_out_1 = NULL;

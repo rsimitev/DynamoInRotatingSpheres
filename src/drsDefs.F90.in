@@ -1,0 +1,91 @@
+! Define a spew statement for easy output
+#define spew if(mpi_rank==0) write(*,*)
+! Define a debug statement for easy output to stderr
+#ifdef DEBUG
+#define debug write(0,*) "Debug", mpi_rank
+#define debug_call call
+#else
+#define debug !
+#define debug_call ! call
+#endif
+
+! Define names for the normalization of the Legendre Associated Polynomials
+#define Normalised     1
+#define UnNormalized   0
+
+! Define a version that will identify which code was ran.
+#define VERSION '@DRS_VERSION_STRING@'
+
+! Inteligible names for the computation types
+#ifndef CALCTYPES
+#define CALCTYPES
+#define LinearThermalOnset  1
+#define KinematicDynamo     2
+#define NonlinearConvection 3
+#define NonlinearDynamo     4
+#define MagnetoConvection   5
+#define LinearCompositionalOnset 6
+#define CALCTYPEMAX         6
+#endif
+
+#ifndef CONVTYPES
+#define CONVTYPES
+#define Thermal           1
+#define Compositional    10
+#endif
+
+#ifndef FLOWBC
+#define FLOWBC
+#define FreeSlip          0
+#define NoSlip            1
+#endif
+
+#ifndef TEMPBC
+#define TEMPBC
+#define FixedTemperature  0
+#define FixedHeatFlux     1
+#endif
+
+#ifndef TEMPPROF
+#define TEMPPROF
+#define Conduction        0
+#define InternalHeating   1
+#endif
+
+#ifndef COMPBC
+#define COMPBC
+#define FixedComposition  0
+#define FixedChemFlux     1
+#endif
+
+#ifndef COMPPROF
+#define COMPPROF
+#define WellMixed         0
+#define InternalSources   1
+#define Diffusive         2
+#endif
+
+#ifndef MAGBC
+#define MAGBC
+#define Vacuum            0
+#define PseudoVacuum      1
+#endif
+
+#define jl_do(j,l) \
+do j=1, blk_ps_size(mpi_rank); \
+   do l=mm(j), Nt_s
+
+#define jl_enddo  \
+   enddo; \
+enddo
+
+#define jlm_do(j,l,m) \
+do j=1, blk_ps_size(mpi_rank); \
+   m = blk_ts_start(j); \
+   do l=m, Nt_s
+
+#define jlm_enddo  \
+   enddo; \
+enddo
+
+! vim: tabstop=3:softtabstop=3:shiftwidth=3:expandtab

@@ -1,0 +1,132 @@
+#!/bin/bash
+############################################################
+######
+######    Example shell script to serve as a job launcher 
+######    and controller.
+######    This example is meant for execution of 
+######    the program under the slurm queueing system.
+######
+#SBATCH -J myMPI              # Job name
+#SBATCH -p development        # Queue name
+#SBATCH -N 2                  # Total number of nodes requested (16 cores/node)
+#SBATCH -n 32                 # Total number of mpi tasks requested
+#SBATCH -t 12:00:00           # Run time (hh:mm:ss) - 1.5 hours
+
+#SBATCH -A A-yourproject      # <-- Allocation name to charge job against
+############################################################
+
+limit coredumpsize 0
+job=$SLURM_JOB_NAME
+#
+#-------------------------------------------------
+# Check the following settings before submitting!
+# (and don't forget the parameters below)
+#  
+file=MyJobFilename
+#
+JOBDIR=$SLURM_SUBMIT_DIR
+# Where to find the utilities required to deal with the state files.
+BINDIR=${HOME}/bin
+# Where to find the program executale
+command=${HOME}/bin/drs.exe
+#
+# Highest number of the run on output
+maxnum=10
+# Number of cpu's to use must be the same as nodes*ppn
+NPROCS=$SLURM_NTASKS
+# Maximum number of steps to take
+STEPS=20000
+# Number of steps between probes
+SAMPLE=500
+# Maximum wall time to run for
+# Do not forget that this is only for the mpi job and that the rest of the
+# script also takes time.
+CPUMAXTIME=11.0
+#-------------------------------------------------
+#
+cd ${JOBDIR}
+if [[ -f drs.lock ]] 
+then
+   echo "A lock file exists."
+   echo "I will not even try to start."
+   exit 3
+fi
+#
+# Override numi with the value in ${job}.num
+if [[ -f ${job}.num ]]
+then
+  numi=`cat ${job}.num`
+else
+  numi=1
+fi
+numo=$(( numi + 1 ))
+ infile="$file.$numi"
+outfile="$file.$numo"
+#
+#
+echo "================================================================="
+echo "SCRIPT   : " ${job}
+echo "infile   : " $infile
+echo "outfile  : " $outfile
+echo "STEPS    : " $STEPS
+echo "SAMPLE   : " $SAMPLE
+echo "hostname : `hostname`" 
+echo "Started  : `date`"
+echo "================================================================="
+#
+# The following few lines establish the parameters to be used in the
+# computation. Check drs-10105.conf.template carefully before running.
+cat << EOF | grep -v '^$' > drs.$numi.conf
+| inputfilename | outputfilname |
+   '$infile'       '$outfile'
+|     noise    |
+     0.D0
+ | magic | lformat | drs_calc_type | tempBC | compBC | flowBC | magBC |
+   10209       1          4           0        0         0       0
+ |  eta     |    P_t    |    P_c   |    Ta    |   Ra_t   |    Ra_c   |   magPr   |
+    0.40         0.1        20.0      1.0e8      6.0e5        7.2e5       5.0
+ |   Nr   |   Nt  |   Np   |   Nr_s  |   Nt_s   |   Np_s   | lsymm | m0 |
+      65      96      193       65        96         193       0      1
+ | delta_t | nsteps |cpu_max_time |transient | sampling_rate|step|time|drift|
+  -0.30D-06   $STEPS   $CPUMAXTIME     0         $SAMPLE
+ 'Started from Dynamo benchmark by Christensen/Grote'
+EOF
+#
+${BINDIR}/uncompressdata $infile
+#
+# +++++ Here we go ... +++++
+ibrun -n $NPROCS ${command} < ${job}.in
+STA=$status
+#
+${BINDIR}/compressdata $infile
+#    
+if [[ -f drs.lock ]] 
+then
+   rm drs.lock
+fi
+#
+echo 'STATUS:' $STA
+echo "Finished: `date`"
+#
+if [[ $STA == 0 ]] 
+then
+   echo ${numo} > ${job}.num
+   # Stop restarting jobs if ${job}.stop exists
+   if [[ -f ${job}.stop ]] 
+   then
+      rm -f ${job}.stop
+      exit
+   fi
+   # Conditionally restart the job
+   if [[ ${numo} -lt ${maxnum} ]] 
+   then
+      sbatch ${job} 1> ${job}.out.${numo} 2>  ${job}.err.${numo}
+   else
+      echo "${job}: max. number of jobs (maxnum=$maxnum) exeeded."
+      exit 2
+   fi
+else
+   echo "Did not finish correctly. Stoping here!"
+   exit $STA
+fi
+

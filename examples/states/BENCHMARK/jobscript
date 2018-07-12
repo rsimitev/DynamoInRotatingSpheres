@@ -1,0 +1,102 @@
+#!/bin/bash
+############################################################
+######
+######                Linux shell script 
+######
+######
+job=$0
+#
+#-------------------------------------------------
+# Check the following settings before submitting!
+# (and don't forget the parameters below)
+#
+file="e035p1t2r100000m1p5test"
+#
+COMPUTEHOST=`hostname`
+STARTDIR=`pwd`
+JOBDIR=$STARTDIR
+BINDIR=${STARTDIR}/bin
+RUNTYPE=$1
+#                                                                                   
+command=${BINDIR}/drs.exe
+##
+export GFORTRAN_UNBUFFERED_ALL=Y
+#
+maxnum=1
+STEPS=20000
+SAMPLE=10
+numi=1
+CPU_MAX_TIME=2.0d0
+STATE_SAVE_RATE=10000
+#
+#-------------------------------------------------
+#
+cd ${JOBDIR}
+#
+if [[ -f ${job}.num ]]
+then
+  numi=`cat ${job}.num`
+fi
+numo=$((numi + 1))
+infile="$file.$numi"
+outfile="$file.$numo"
+#
+echo "================================================================="
+echo "SCRIPT   : " ${job}
+echo "infile   : " $infile
+echo "outfile  : " $outfile
+echo "STEPS    : " $STEPS
+echo "SAMPLE   : " $SAMPLE
+echo "STARTDIR : " $STARTDIR
+echo "Started  : `date`"
+echo "Hostname : `hostname`"
+echo "================================================================="
+#
+#-------------------------------------------------
+sed -e "s/@fileIn@/$infile/"   \
+    -e "s/@fileOut@/$outfile/" \
+    -e "s/@STEPS@/$STEPS/"     \
+    -e "s/@SAMPLING_RATE@/$SAMPLE/"     \
+    -e "s/@STATE_SAVE_RATE@/$STATE_SAVE_RATE/" \
+    -e "s/@CPU_MAX_TIME@/$CPU_MAX_TIME/"       \
+    -e "s/@COMMENT@/'Started from $infile'/"   \
+    drs.conf.template > drs.conf
+
+#
+${BINDIR}/uncompressdata $infile
+#
+# +++++ Here we go ... +++++
+#
+case $RUNTYPE in
+   'serial'|'serialDD')
+      time ${command}
+      ;;
+   'parallel'|'parallelDD')
+      mpirun -np ${NPROCS} ${command}
+      ;;
+esac
+#
+STA=$?
+echo 'STATUS:' $STA
+echo "Finished: `date`"
+#
+exit
+#
+if [[ $STA == 0 ]] 
+then
+   ${BINDIR}/compressdata $outfile
+   cat   $file.$numo.ek >> ${JOBDIR}/$file.ek
+   cat   $file.$numo.eb >> ${JOBDIR}/$file.eb
+   echo ${numo} > ${job}.num
+   if [[ ${numo} < ${maxnum} ]]
+   then
+      ./${job} > ${job}.out.${numo} &
+   else
+      echo "${job}: max. number of jobs (maxnum=$maxnum) exeeded."
+   fi
+
+fi
+
+
+
+

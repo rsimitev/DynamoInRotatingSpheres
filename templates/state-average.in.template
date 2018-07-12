@@ -1,0 +1,6 @@
+# Add the names of states here, one per line.
+# First state defines the spatial resolution of the average.
+# Any line starting with '#' or '*' is disregarded.
+# An example follows:
+e035p1t2r100000m1p5test.1
+e035p1t2r100000m1p5test.2

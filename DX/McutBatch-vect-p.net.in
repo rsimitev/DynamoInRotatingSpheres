@@ -1,0 +1,302 @@
+//
+// time: Fri Jul 10 17:35:30 2015
+//
+// version: 3.2.0 (format), 4.4.4 (DX)
+//
+//
+//
+// macro reference (direct): SymmetricMinMax @DXMACROS@/NormMinMax.net
+include "NormMinMax.net"
+//
+// macro reference (direct): ColouredIsolines @DXMACROS@/ColouredIsolines.net
+include "ColouredIsolines.net"
+//
+// MODULE main
+// workspace: width = 468, height = 974
+// layout: snap = 0, width = 50, height = 50, align = NN
+//
+macro main(
+) -> (
+) {
+    // 
+    // node Camera[1]: x = 252, y = 730, inputs = 9, label = Camera
+    // input[1]: defaulting = 0, visible = 1, type = 8, value = [0.7 0 0]
+    // input[2]: defaulting = 0, visible = 1, type = 8, value = [0.7 -1 0]
+    // input[3]: defaulting = 0, visible = 1, type = 5, value = 3.0
+    // input[4]: defaulting = 0, visible = 1, type = 1, value = 640
+    // input[5]: defaulting = 0, visible = 1, type = 5, value = 1.1
+    // input[6]: defaulting = 0, visible = 1, type = 8, value = [0 0 1]
+    // input[9]: defaulting = 0, visible = 1, type = 32, value = "white"
+    //
+main_Camera_1_out_1 = 
+    Camera(
+    main_Camera_1_in_1,
+    main_Camera_1_in_2,
+    main_Camera_1_in_3,
+    main_Camera_1_in_4,
+    main_Camera_1_in_5,
+    main_Camera_1_in_6,
+    main_Camera_1_in_7,
+    main_Camera_1_in_8,
+    main_Camera_1_in_9
+    ) [instance: 1, cache: 1];
+    // 
+    // node Import[1]: x = 29, y = 100, inputs = 6, label = Import
+    // input[1]: defaulting = 0, visible = 1, type = 32, value = "dx-vec.general"
+    // input[3]: defaulting = 0, visible = 1, type = 32, value = "general"
+    //
+main_Import_1_out_1 = 
+    Import(
+    main_Import_1_in_1,
+    main_Import_1_in_2,
+    main_Import_1_in_3,
+    main_Import_1_in_4,
+    main_Import_1_in_5,
+    main_Import_1_in_6
+    ) [instance: 1, cache: 1];
+    // 
+    // node Compute[1]: x = 46, y = 190, inputs = 3, label = Compute
+    // input[1]: defaulting = 0, visible = 0, type = 32, value = "$0.z"
+    // expression: value = a.z
+    // name[2]: value = a
+    // name[3]: value = b
+    //
+main_Compute_1_out_1 = 
+    Compute(
+    main_Compute_1_in_1,
+    main_Import_1_out_1,
+    main_Compute_1_in_3
+    ) [instance: 1, cache: 1];
+    // 
+    // node MapToPlane[1]: x = 67, y = 281, inputs = 3, label = MapToPlane
+    // input[3]: defaulting = 0, visible = 1, type = 8, value = [0 1 0]
+    //
+main_MapToPlane_1_out_1 = 
+    MapToPlane(
+    main_Compute_1_out_1,
+    main_MapToPlane_1_in_2,
+    main_MapToPlane_1_in_3
+    ) [instance: 1, cache: 1];
+    // 
+    // node SymmetricMinMax[1]: x = 42, y = 370, inputs = 1, label = SymmetricMinMax
+    //
+main_SymmetricMinMax_1_out_1,
+main_SymmetricMinMax_1_out_2 = 
+    SymmetricMinMax(
+    main_MapToPlane_1_out_1
+    ) [instance: 1, cache: 1];
+    // 
+    // node Colormap[1]: x = 45, y = 460, inputs = 19, label = Colormap
+    // input[1]: defaulting = 0, visible = 0, type = 16777224, value = { [0.0 0.666667] [0.44625407 0.49473684] [0.51465798 0.16842105] [0.78827362 0.042105263] [1.0 0.0] }
+    // input[2]: defaulting = 0, visible = 0, type = 16777224, value = { [0.0 1.0] [0.3485342 0.87368421] [0.50162866 0.084210526] [0.6970684 0.92631579] [1.0 1.0] }
+    // input[3]: defaulting = 0, visible = 0, type = 16777224, value = { [0.0 1.0] [1.0 1.0] }
+    // input[4]: defaulting = 0, visible = 0, type = 16777224, value = { [0.0 1.0] [1.0 1.0] }
+    // input[5]: defaulting = 0, visible = 0, type = 32, value = "Colormap_1"
+    // input[7]: defaulting = 1, visible = 1, type = 5, value = -1.937138
+    // input[8]: defaulting = 1, visible = 1, type = 5, value = 1.937138
+    // input[9]: defaulting = 1, visible = 1, type = 1, value = 20
+    // input[12]: defaulting = 0, visible = 0, type = 16777221, value = { -1.937138 1.937138 }
+    // input[17]: defaulting = 0, visible = 0, type = 5, value = -1.937138
+    // input[18]: defaulting = 0, visible = 0, type = 5, value = 1.937138
+    // input[19]: visible = 1
+    // window: position = (0.0060,0.0286), size = 0.3869x0.4286, screen = 0
+    //
+main_Colormap_1_out_1[cache: 2],
+main_Colormap_1_out_2[cache: 2] = 
+    Colormap(
+    main_Colormap_1_in_1,
+    main_Colormap_1_in_2,
+    main_Colormap_1_in_3,
+    main_Colormap_1_in_4,
+    main_Colormap_1_in_5,
+    main_MapToPlane_1_out_1,
+    main_SymmetricMinMax_1_out_1,
+    main_SymmetricMinMax_1_out_2,
+    main_Colormap_1_in_9,
+    main_Colormap_1_in_10,
+    main_Colormap_1_in_11,
+    main_Colormap_1_in_12,
+    main_Colormap_1_in_13,
+    main_Colormap_1_in_14,
+    main_Colormap_1_in_15,
+    main_Colormap_1_in_16,
+    main_Colormap_1_in_17,
+    main_Colormap_1_in_18,
+    main_Colormap_1_in_19
+    ) [instance: 1, cache: 1];
+    // 
+    // node Color[5]: x = 51, y = 550, inputs = 5, label = Color
+    //
+main_Color_5_out_1 = 
+    Color(
+    main_MapToPlane_1_out_1,
+    main_Colormap_1_out_1,
+    main_Colormap_1_out_2,
+    main_Color_5_in_4,
+    main_Color_5_in_5
+    ) [instance: 5, cache: 1];
+    // 
+    // node Remove[1]: x = 71, y = 640, inputs = 2, label = Remove
+    // input[2]: defaulting = 0, visible = 1, type = 32, value = "normals"
+    //
+main_Remove_1_out_1 = 
+    Remove(
+    main_Color_5_out_1,
+    main_Remove_1_in_2
+    ) [instance: 1, cache: 1];
+    // 
+    // node ColouredIsolines[1]: x = 220, y = 550, inputs = 3, label = ColouredIsolines
+    //
+main_ColouredIsolines_1_out_1 = 
+    ColouredIsolines(
+    main_MapToPlane_1_out_1,
+    main_ColouredIsolines_1_in_2,
+    main_ColouredIsolines_1_in_3
+    ) [instance: 1, cache: 1];
+    // 
+    // node ColorBar[1]: x = 152, y = 640, inputs = 16, label = ColorBar
+    // input[2]: defaulting = 0, visible = 1, type = 8, value = [0.97 0.5]
+    // input[3]: defaulting = 0, visible = 1, type = 8, value = [400 25]
+    // input[9]: defaulting = 0, visible = 1, type = 16777248, value = {"black"}
+    // input[15]: defaulting = 0, visible = 0, type = 3, value = 1
+    // input[16]: defaulting = 0, visible = 0, type = 1, value = 11
+    //
+main_ColorBar_1_out_1 = 
+    ColorBar(
+    main_Colormap_1_out_1,
+    main_ColorBar_1_in_2,
+    main_ColorBar_1_in_3,
+    main_ColorBar_1_in_4,
+    main_ColorBar_1_in_5,
+    main_ColorBar_1_in_6,
+    main_ColorBar_1_in_7,
+    main_ColorBar_1_in_8,
+    main_ColorBar_1_in_9,
+    main_ColorBar_1_in_10,
+    main_ColorBar_1_in_11,
+    main_ColorBar_1_in_12,
+    main_ColorBar_1_in_13,
+    main_ColorBar_1_in_14,
+    main_ColorBar_1_in_15,
+    main_ColorBar_1_in_16
+    ) [instance: 1, cache: 1];
+    // 
+    // node Collect[1]: x = 161, y = 730, inputs = 3, label = Collect
+    //
+main_Collect_1_out_1 = 
+    Collect(
+    main_Remove_1_out_1,
+    main_ColouredIsolines_1_out_1,
+    main_ColorBar_1_out_1
+    ) [instance: 1, cache: 1];
+    // 
+    // node ClipPlane[1]: x = 179, y = 802, inputs = 3, label = ClipPlane
+    // input[3]: defaulting = 0, visible = 1, type = 8, value = [-1 0 0]
+    //
+main_ClipPlane_1_out_1 = 
+    ClipPlane(
+    main_Collect_1_out_1,
+    main_ClipPlane_1_in_2,
+    main_ClipPlane_1_in_3
+    ) [instance: 1, cache: 1];
+    // 
+    // node Render[1]: x = 311, y = 820, inputs = 3, label = Render
+    //
+main_Render_1_out_1 = 
+    Render(
+    main_ClipPlane_1_out_1,
+    main_Camera_1_out_1,
+    main_Render_1_in_3
+    ) [instance: 1, cache: 1];
+    // 
+    // node WriteImage[1]: x = 331, y = 910, inputs = 4, label = WriteImage
+    // input[2]: defaulting = 0, visible = 1, type = 32, value = "McutBatch-image.tiff"
+    // input[3]: defaulting = 0, visible = 1, type = 32, value = "tiff"
+    //
+    WriteImage(
+    main_Render_1_out_1,
+    main_WriteImage_1_in_2,
+    main_WriteImage_1_in_3,
+    main_WriteImage_1_in_4
+    ) [instance: 1, cache: 1];
+// network: end of macro body
+}
+main_Camera_1_in_1 = [0.7 0 0];
+main_Camera_1_in_2 = [0.7 -1 0];
+main_Camera_1_in_3 = 3.0;
+main_Camera_1_in_4 = 640;
+main_Camera_1_in_5 = 1.1;
+main_Camera_1_in_6 = [0 0 1];
+main_Camera_1_in_7 = NULL;
+main_Camera_1_in_8 = NULL;
+main_Camera_1_in_9 = "white";
+main_Camera_1_out_1 = NULL;
+main_Import_1_in_1 = "dx-vec.general";
+main_Import_1_in_2 = NULL;
+main_Import_1_in_3 = "general";
+main_Import_1_in_4 = NULL;
+main_Import_1_in_5 = NULL;
+main_Import_1_in_6 = NULL;
+main_Import_1_out_1 = NULL;
+main_Compute_1_in_1 = "$0.z";
+main_Compute_1_in_3 = NULL;
+main_Compute_1_out_1 = NULL;
+main_MapToPlane_1_in_2 = NULL;
+main_MapToPlane_1_in_3 = [0 1 0];
+main_MapToPlane_1_out_1 = NULL;
+main_SymmetricMinMax_1_out_1 = NULL;
+main_SymmetricMinMax_1_out_2 = NULL;
+main_Colormap_1_in_1 = { [0.0 0.666667] [0.44625407 0.49473684] [0.51465798 0.16842105] [0.78827362 0.042105263] [1.0 0.0] };
+main_Colormap_1_in_2 = { [0.0 1.0] [0.3485342 0.87368421] [0.50162866 0.084210526] [0.6970684 0.92631579] [1.0 1.0] };
+main_Colormap_1_in_3 = { [0.0 1.0] [1.0 1.0] };
+main_Colormap_1_in_4 = { [0.0 1.0] [1.0 1.0] };
+main_Colormap_1_in_5 = "Colormap_1";
+main_Colormap_1_in_9 = NULL;
+main_Colormap_1_in_10 = NULL;
+main_Colormap_1_in_11 = NULL;
+main_Colormap_1_in_12 = { -1.937138 1.937138 };
+main_Colormap_1_in_13 = NULL;
+main_Colormap_1_in_14 = NULL;
+main_Colormap_1_in_15 = NULL;
+main_Colormap_1_in_16 = NULL;
+main_Colormap_1_in_17 = -1.937138;
+main_Colormap_1_in_18 = 1.937138;
+main_Colormap_1_in_19 = NULL;
+main_Colormap_1_out_1 = NULL;
+main_Colormap_1_out_2 = NULL;
+main_Color_5_in_4 = NULL;
+main_Color_5_in_5 = NULL;
+main_Color_5_out_1 = NULL;
+main_Remove_1_in_2 = "normals";
+main_Remove_1_out_1 = NULL;
+main_ColouredIsolines_1_in_2 = NULL;
+main_ColouredIsolines_1_in_3 = NULL;
+main_ColouredIsolines_1_out_1 = NULL;
+main_ColorBar_1_in_2 = [0.97 0.5];
+main_ColorBar_1_in_3 = [400 25];
+main_ColorBar_1_in_4 = NULL;
+main_ColorBar_1_in_5 = NULL;
+main_ColorBar_1_in_6 = NULL;
+main_ColorBar_1_in_7 = NULL;
+main_ColorBar_1_in_8 = NULL;
+main_ColorBar_1_in_9 = {"black"};
+main_ColorBar_1_in_10 = NULL;
+main_ColorBar_1_in_11 = NULL;
+main_ColorBar_1_in_12 = NULL;
+main_ColorBar_1_in_13 = NULL;
+main_ColorBar_1_in_14 = NULL;
+main_ColorBar_1_in_15 = 1;
+main_ColorBar_1_in_16 = 11;
+main_ColorBar_1_out_1 = NULL;
+main_Collect_1_out_1 = NULL;
+main_ClipPlane_1_in_2 = NULL;
+main_ClipPlane_1_in_3 = [-1 0 0];
+main_ClipPlane_1_out_1 = NULL;
+main_Render_1_in_3 = NULL;
+main_Render_1_out_1 = NULL;
+main_WriteImage_1_in_2 = "McutBatch-image.tiff";
+main_WriteImage_1_in_3 = "tiff";
+main_WriteImage_1_in_4 = NULL;
+Executive("product version 4 4 4");
+$sync
+main();

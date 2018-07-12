@@ -1,0 +1,16 @@
+#!/bin/csh
+if ( $#argv != 1 ) then
+   echo 'usage:' $0 '<name>'
+   echo 'if <name> contains wildcards it must be written as "<name>" '
+   exit
+endif
+
+### expand $1 if it contains wildcards (normal):
+foreach file ( $1.tor.gz )
+  set basename=${file:r:r}
+  ### loop over all possible file extensions:
+  foreach e ( pol tor temp Bp Bt thetac icBp icBt tempa tora pola)
+   if( -f ${basename}.$e.gz ) then
+     gunzip -vf "${basename}.$e.gz"
+   endif
+end

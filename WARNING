@@ -1,0 +1,10 @@
+WARNING
+
+Due to a bug in the boundary conditions, versions prior and including 1.2.x are not suitable for the Jackson 2014 Benchmark exercise.
+
+Prior to version 1.6.0, the spherical harmonic coefficients were unnormalised. After and including 1.6.0 the spherical harmonic coefficients are normalized to 4Pi.
+See the manual to see what this means. The code is able to recognise and correctly interpret both old and new coefficients via the MAGIC numbers,
+again, see the manual to understand what this means.
+
+Prior to version 1.7.0 there was a bug in the internal sources profiles. The derivatives had the wrong sign.
+!!!YOU HAVE BEEN WARNED!!!

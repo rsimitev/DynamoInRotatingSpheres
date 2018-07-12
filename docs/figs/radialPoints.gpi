@@ -1,0 +1,8 @@
+unset tics
+set xtics
+unset key
+set grid
+set term postscript eps colour size 4,1
+set output 'radialPoints.eps'
+plot 'radialNodes.txt' u 1:-1  w lp lw 3 ps 2 pt 6
+show output

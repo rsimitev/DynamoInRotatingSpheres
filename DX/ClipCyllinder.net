@@ -1,0 +1,89 @@
+//
+// time: Fri Jun  5 12:24:24 2015
+//
+// version: 3.2.0 (format), 4.4.4 (DX)
+//
+//
+// Begin MDF
+// MODULE ClipCyllinder
+// CATEGORY Macros
+// DESCRIPTION Selects a cylindrical region
+// INPUT input_1; field; (no default);  
+// INPUT input_2; scalar or scalar list; (no default);  
+// OUTPUT output_1; object;  
+// End MDF
+// workspace: width = 137, height = 499
+// layout: snap = 0, width = 50, height = 50, align = NN
+//
+macro ClipCyllinder(
+ input_1
+,input_2
+) -> (
+ output_1
+) {
+    // 
+    // node Input[7]: x = 0, y = 0, inputs = 0, label = Input
+    // parameter: position = 1, name = 'input_1', value = ' ', descriptive = 0, description = ' ', required = 0, visible = 1
+    //
+ClipCyllinder_Input_7_out_1 = input_1;
+    // 
+    // node Mark[2]: x = 18, y = 80, inputs = 2, label = Mark
+    // input[2]: defaulting = 0, visible = 1, type = 32, value = "positions"
+    //
+ClipCyllinder_Mark_2_out_1 = 
+    Mark(
+    ClipCyllinder_Input_7_out_1,
+    "positions"
+    ) [instance: 2, cache: 1];
+    // 
+    // node Compute[35]: x = 14, y = 171, inputs = 3, label = Compute
+    // input[1]: defaulting = 0, visible = 0, type = 32, value = "sqrt($0.x**2+$0.y**2)"
+    // expression: value = sqrt(a.x**2+a.y**2)
+    // name[2]: value = a
+    // name[3]: value = b
+    //
+ClipCyllinder_Compute_35_out_1 = 
+    Compute(
+    "sqrt($0.x**2+$0.y**2)",
+    ClipCyllinder_Mark_2_out_1,
+    NULL
+    ) [instance: 35, cache: 1];
+    // 
+    // node Input[8]: x = 62, y = 0, inputs = 0, label = Input
+    // parameter: position = 2, name = 'input_2', value = ' ', descriptive = 0, description = ' ', required = 0, visible = 1
+    //
+ClipCyllinder_Input_8_out_1 = input_2;
+    // 
+    // node Isosurface[3]: x = 0, y = 273, inputs = 6, label = Isosurface
+    // input[2]: defaulting = 1, visible = 1, type = 5, value = 0.54
+    //
+ClipCyllinder_Isosurface_3_out_1 = 
+    Isosurface(
+    ClipCyllinder_Compute_35_out_1,
+    ClipCyllinder_Input_8_out_1,
+    NULL,
+    NULL,
+    NULL,
+    NULL
+    ) [instance: 3, cache: 1];
+    // 
+    // node ClipBox[2]: x = 61, y = 355, inputs = 2, label = ClipBox
+    //
+ClipCyllinder_ClipBox_2_out_1 = 
+    ClipBox(
+    ClipCyllinder_Isosurface_3_out_1,
+    ClipCyllinder_Input_7_out_1
+    ) [instance: 2, cache: 1];
+    // 
+    // node Output[5]: x = 0, y = 435, inputs = 1, label = Output
+    // parameter: position = 1, name = 'output_1', value = ' ', descriptive = 0, description = ' ', required = 0, visible = 1
+    //
+output_1 = ClipCyllinder_ClipBox_2_out_1;
+// network: end of macro body
+}
+ClipCyllinder_Input_7_out_1 = NULL;
+ClipCyllinder_Mark_2_out_1 = NULL;
+ClipCyllinder_Compute_35_out_1 = NULL;
+ClipCyllinder_Input_8_out_1 = NULL;
+ClipCyllinder_Isosurface_3_out_1 = NULL;
+ClipCyllinder_ClipBox_2_out_1 = NULL;

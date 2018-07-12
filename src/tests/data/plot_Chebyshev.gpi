@@ -1,0 +1,23 @@
+set datafile fortran
+set key outside
+# The Chebyshev polynomials
+set xrange [-1:1]
+set terminal postscript eps color enhanced lw 2 20
+set output 'Chebyshev.eps'
+set yrange [-1:1]
+plot   1               w l lw 2 lc 1 notitle, 'Chebyshev.dat' u 1:2 w p pt 7 ps 2 lc 1 t 'n=1', \
+       x               w l lw 2 lc 2 notitle, 'Chebyshev.dat' u 1:3 w p pt 7 ps 2 lc 2 t 'n=2', \
+       2*(x**2)-1      w l lw 2 lc 3 notitle, 'Chebyshev.dat' u 1:4 w p pt 7 ps 2 lc 3 t 'n=3', \
+       4*(x**3)-3*x    w l lw 2 lc 4 notitle, 'Chebyshev.dat' u 1:5 w p pt 7 ps 2 lc 4 t 'n=4', \
+       8*x**4-8*x**2+1 w l lw 2 lc 5 notitle, 'Chebyshev.dat' u 1:6 w p pt 7 ps 2 lc 5 t 'n=5'
+show output
+
+# The derivatives
+set output 'Chebyshev_dx.eps'
+set yrange [-20:20]
+plot   0             w l lw 2 lc 1 notitle, 'Chebyshev_dx.dat' u 1:2 w p pt 7 ps 2 lc 1 t 'n=1', \
+       1             w l lw 2 lc 2 notitle, 'Chebyshev_dx.dat' u 1:3 w p pt 7 ps 2 lc 2 t 'n=2', \
+       4*x           w l lw 2 lc 3 notitle, 'Chebyshev_dx.dat' u 1:4 w p pt 7 ps 2 lc 3 t 'n=3', \
+       12*(x**2)-3   w l lw 2 lc 4 notitle, 'Chebyshev_dx.dat' u 1:5 w p pt 7 ps 2 lc 4 t 'n=4', \
+       32*x**3-16*x  w l lw 2 lc 5 notitle, 'Chebyshev_dx.dat' u 1:6 w p pt 7 ps 2 lc 5 t 'n=5'
+show output

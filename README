@@ -1,0 +1,60 @@
+Dynamo in Rotating Shells
+=========================
+
+Luis Silva (lacsilva@gmail.com)
+Radostin D Simitev (Radostin.Simitev@glasgow.ac.uk,https://orcid.org/0000-0002-2207-5789)
+
+# Brief description
+ 
+This is a computer code for numerical simulations of
+thermo-compositional convection and of convection driven dynamos in
+rotating spherical shells for the purposes of mathematical modelling
+of the geodynamo, planetary and stellar dynamos.
+
+# History of development
+
+The idea and early mathematical formulations were conceived by Friedrich
+H Busse (University of Bayreuth) at around 1996. Early versions of
+the code were developed by Tilgner, at the time a PostDoc with
+Busse, and by Ardes, a student in that research group. Grote
+used with the code in relation to his PhD dissertation (Bayreuth,
+2000). Simitev also used the code for his PhD dissertation (Bayreuth,
+2004), and then maintained, modified, and used the code
+extensively. Silva ported the code to Fortran 95 and linked to open
+source libraries, and prepared the documentation (2014-16). 
+
+# Acknowledgements
+
+The work of Silva and Simitev was supported by the Leverhulme Trust [grant number RPG-2012-600].
+
+
+# Details
+
+## DEPENDENCIES
+We use cmake version 2.6-patch 4 as the build system.
+We depend on FFTW version 3.2.1. Not tested with any other versions.
+We use OpenMPI 1.6 (at least) for the parallel version. The binary wrappers must be in your $PATH and the libraries in your $LD_LIBRARY_PATH
+Online documentation can be built using doxygen >= 1.6.1
+
+## Building the online documentation
+mkdir BUILD
+cd BUILD
+cmake ..
+make doc
+
+The code documentation can then be found by pointing a browser to BUILD/APIDOX/index.html
+
+## COMPILATION (sequential)
+mkdir BUILD
+cd BUILD
+cmake -DCMAKE_INSTALL_PREFIX=${HOME} ..
+make && make install
+
+## COMPILATION (parallel)
+mkdir BUILD
+cd BUILD
+cmake -DCMAKE_INSTALL_PREFIX=${HOME} -DMPI=ON ..
+make && make install
+
+After all run successfully, the file drs.exe should be in "${HOME}/bin/".
+

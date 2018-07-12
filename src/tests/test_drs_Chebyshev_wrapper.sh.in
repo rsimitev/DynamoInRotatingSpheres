@@ -1,0 +1,6 @@
+#!/bin/bash
+# Copyright  L. Silva (lacsilva@gmail.com), 2015
+# $1 should be the test name ('che' or 'cdr')
+cp @CMAKE_CURRENT_SOURCE_DIR@/data/Chebyshev.dat .
+cp @CMAKE_CURRENT_SOURCE_DIR@/data/Chebyshev_dx.dat .
+./test_drs_Chebyshev $1

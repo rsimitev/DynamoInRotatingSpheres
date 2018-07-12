@@ -1,0 +1,26 @@
+List of features to implement in arbitrary order.
+
+* Implement MCNAB instead of CNAB for the time-stepping for better stability.
+* Rewrite the temperature adimensionalization such that the top to bottom adimensional 
+  temperature difference is always 1 in adimensional units.
+* Write a proper benchmark test pack:
+ - provide program that returns true if all of the quantities for the benchmark are within 1% of the reference values;
+ - test all the cases of Jones et al. 2001;
+ - test all the cases of Jackson et al.;
+ - Write a benchmark mode using the debug module and facilities;
+* Input/Output in netcdf format;
+* Concurrent I/O;
+* Parallell evaluation of the several equations;
+* Optimization of the array index in spectral space;
+* Output of intermediate state-files;
+* User defined temperature and composition profiles.
+* User defined lateraly variable boundary conditions;
+* Topography?
+* Documentation:
+  - Document headers for all functions and subroutines;
+  - Document the utilities;
+* Figure out a way to reduce the usage of #ifdef COMP      
+
+DONE
+* Write a proper benchmark test pack:
+ - provide initial conditions;
