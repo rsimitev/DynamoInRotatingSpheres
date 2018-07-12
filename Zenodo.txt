@@ -1,9 +1,9 @@
 Pseudo-spectral code for numerical simulation of nonlinear
 thermo-compositional convection and dynamos in rotating spherical shells
-=========================
 
 Luis Silva 
 Radostin D Simitev (orcid.org/0000-0002-2207-5789)
+School of Mathematics and Statistics, University of Glasgow, Glasgow G12 8QQ, UK
 
 This is a set of codes for numerical simulation of nonlinear
 thermo-compositional convection and of convection-driven dynamos in
