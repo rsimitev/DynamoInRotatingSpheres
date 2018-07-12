@@ -1,24 +1,24 @@
 Pseudo-spectral code for numerical simulation of nonlinear
-thermo-compositional convection and dynamos in rotating spherical shells  
+thermo-compositional convection and dynamos in rotating spherical shells
 =========================
 
-Luis Silva
+Luis Silva 
 Radostin D Simitev (orcid.org/0000-0002-2207-5789)
 
 This is a set of codes for numerical simulation of nonlinear
 thermo-compositional convection and of convection-driven dynamos in
 rotating spherical shells. The code has been benchmarked (Matsui et
-al 2016) and has been used extensively for modelling of geodynamo,
-planetary and stellar dynamos (see references in https://orcid.org/0000-0002-2207-5789). 
+al 2016) and has been used extensively for modelling of the geodynamo,
+planetary and stellar dynamos (Simitev 2002-2018).
 
 The main numerical code uses a pseudo-spectral spatial discretisation,
-see (Tilgner 1999). The idea and early mathematical formulations were
+see (Tilgner 1999). The idea and early mathematical formulations were 
 conceived by Busse. Early implementations were done by Tilgner, Ardes
 and Grote. Simitev maintained, modified, and used the code extensively,
-including introduction of a governing equation for the
-concentration within the project acknowledged below. Silva ported the
-code to Fortran 95 and open source libraries, and prepared the
-documentation (2014-16).   
+including introduction of a governing equation for the concentration
+within the project acknowledged below. Silva ported the code to
+Fortran 95 and open source libraries, and prepared the documentation
+(2014-16). 
 
 # Acknowledgements
 
@@ -26,11 +26,14 @@ The work of Silva and Simitev was supported by the Leverhulme Trust
 [grant number RPG-2012-600].
 
 # References
-Matsui, et al. Performance benchmarks for a next generation numerical dynamo model,
-Geochem. Geophys. Geosyst., 17, pp 1586-1607 DOI:10.1002/2015GC006159, 2016.
+
+Matsui, et al. Performance benchmarks for a next generation numerical
+dynamo model, Geochem. Geophys. Geosyst., 17, pp 1586-1607
+DOI:10.1002/2015GC006159, 2016. 
 
 Tilgner, A. 1999 Spectral methods for the simulation of incompressible
 flows in spherical shells. Intl J. Numer. Meth. Fluids 30 (6),
 713–724.
 
-Simitev, https://orcid.org/0000-0002-2207-5789
+Simitev (2002-2018), https://orcid.org/0000-0002-2207-5789
+
